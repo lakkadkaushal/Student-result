@@ -1,61 +1,78 @@
+import { useState } from 'react';
 import './App.css';
-import React, { useState } from 'react';
-
 function App() {
-
-  const [Bdate, setBdate] = useState('');
-  const [Tdate, setTdate] = useState('');
-  const [sec, setsec] = useState('');
-  const [mini, setmini] = useState('');
-  const [hou, sethou] = useState('');
-  const [day, setday] = useState('');
-  const [wee, setwee] = useState('');
-  const [mon, setmon] = useState('');
-  const [yer, setyer] = useState('');
+  let [amount, setamount] = useState('');
+  let [year, setyear] = useState('');
+  let [rate, setrate] = useState('');
   
-  const getage = () => {
-    const todayDate = new Date(Tdate);
+  let [duration, setduration] = useState('');
+  let [final , setFinal] = useState('');
+  let [emi, setemi] = useState('');
+  let [total, settotal] = useState('');
+  let [yetotal, setyetotal] = useState('');
+
+  function EMI() {
+    setamount(Number(amount))
+    setyear(Number(year))
+    setrate(Number(rate))
+    let ra = rate / 12 / 100
     
-    const BirthDate = new Date(Bdate);
-    const miliSec = todayDate - BirthDate;
-    const second = miliSec / 1000;
-    const mintus = second / 60;
-    const hours = mintus / 60;
-    const day = hours / 24;
-    const week = Math.floor(day / 7);
-    const month = (todayDate.getMonth() - BirthDate.getMonth()) + (12 * (todayDate.getFullYear() - BirthDate.getFullYear()));
-    const year = Math.floor(month / 12);
+    let tempemi = ((amount * ra * Math.pow((1 + ra), (year * 12))) / (Math.pow((1 + ra), (year * 12)) - 1)).toFixed(2);
+    let Tamt = (tempemi * ((year) * 12));
+    let Tint = (Tamt - (amount)).toFixed(2);
+    // console.log(typeof(Tint))
+    
+    let Year_inter = (Tint / (year)).toFixed(2);
+    
 
-    setsec(second)
-    setmini(mintus)
-    sethou(hours)
-    setday(day) 
-    setwee(week)
-    setmon(month)
-    setyer(year)
+    setduration(year * 12)
+    setemi(tempemi);
+    settotal(Tamt);
+    setyetotal(Tint);
+    setFinal(Year_inter);
+
+
   }
-  
-
-  
   return (
     <>
-      <div className="data">
-        <h1>Enter Date of Birth Day :</h1>
-        <input type="date" onChange={(e) => setBdate(e.target.value)} />
-        <h1>Enter ToDay Date :</h1>
-        <input type="date" onChange={(e) => setTdate(e.target.value)} />
+      Amount = 
+      <input type="text" value={amount} onChange={(e) => { setamount(e.target.value) }} /><br></br>
+      Year =
+
+      <input type="text" value={year} onChange={(e) => { setyear(e.target.value) }} /><br></br>
+
+      Rate = 
+      <input type="text" value={rate} onChange={(e) => { setrate(e.target.value) }} /><br></br>
+        <br/>
+      <input type="button"  value="Find" onClick={EMI}></input> <br></br>
+     
         <br></br>
-        <button onClick={getage}>CLICK TO GET AGE</button>
-      </div>
-      <div className="data2">
-        <h1>YEAR :{yer}</h1>
-        <h1>MONTHS : {mon}</h1>
-        <h1>WEEKS :{wee} </h1>
-        <h1>DAY :{day} </h1>
-        <h1>HOURS :{hou}</h1>
-        <h1>MINUTES : {mini}</h1>
-        <h1>SECONDS :{sec} </h1>
-      </div>
+      <table border="1">
+     
+        <tr>
+          <td>Payment Duration</td>
+          <td><input type="text" value={duration} /></td>
+        </tr>
+        <tr>
+          <td>Calculated Monthly EMI</td>
+          <td><input type="text" value={emi} /></td>
+        </tr>
+        <tr>
+          <td>Total  Amount</td>
+          <td><input type="text" value={total} /></td>
+        </tr>
+
+        <tr>
+          <td>Total Interest Amount</td>
+          <td><input type="text" value={yetotal} /></td>
+        </tr>
+        <tr>
+          <td>Yearly Interest Amount</td>
+          <td><input type="text" value={final} /></td>
+        </tr>
+
+      </table>
+
     </>
   );
 }
